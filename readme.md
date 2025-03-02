@@ -1,6 +1,4 @@
 
-Here’s a well-structured README.md that introduces the main algorithm and approach method used in ARC Prize 2024, making it easy for anyone to read and study.
-
 ARC Prize 2024 – Main Algorithm & Approach
 
 📌 Introduction
