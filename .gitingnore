@@ -3,6 +3,7 @@
 *.pyc
 *.DS_store
 *.zip
+*.DS_Store
 
 # Ignore the node_modules directory
 #node_modules/
