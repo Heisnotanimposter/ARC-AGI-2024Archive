@@ -1,5 +1,9 @@
 ARC-AGI
 Timeline
+
+<img width="1200" height="300" alt="ARC-AGI-Timeline" src="https://github.com/user-attachments/assets/5428536b-157f-400a-a749-b2a6c286b55d" />
+
+
 2019 - ARC-AGI was introduced in François Chollets 2019 paper, "On the Measure of Intelligence". At this point, François has the hypothesis that it could not easily be beaten.
 
 2020 - In order to test this, he hosted the first ARC-AGI competition on Kaggle in 2020. The winning team, "ice cuber," achieved a 21% success rate on the test set. This low score was the first strong evidence that François's ideas in On/Measure were correct.
