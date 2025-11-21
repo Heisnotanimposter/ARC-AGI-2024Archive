@@ -9,5 +9,17 @@ Timeline
 2023 - Then in 2023, the competition continued with ARCathon 2023. This time 265+ teams from 65 countries competed. First place was shared between Somayyeh Gholami and Mehran Kazeminia (Team SM) and Jack Cole (Team MindsAI) both reaching 30% on the private evaluation set.
 
 2024 - In 2024, Mike Knoop and François teamed up to create ARC Prize 2024. While the Grand Prize remained unlocked, over $125K in prizes were awarded to teams with top scores and papers. The year ended with a top score on the private evaluation of 53% See the results.
+    https://github.com/da-fr/arc-prize-2024/blob/main/the_architects.pdf
+    https://www.kaggle.com/code/rgreenblatt/rg-basic-ported-submission?scriptVersionId=184981551
+    https://github.com/michaelhodel/arc-dsl
+    https://github.com/michaelhodel/re-arc
+    https://www.kaggle.com/jcole75
+    https://github.com/jfpuget/ARC-AGI-Challenge-2024/blob/main/arc.pdf
 
+<<<<<<< Updated upstream
 2025 - ARC Prize grew into a non-profit foundation to foster the mission of guiding open source AGI research. Based on ARC-AGI-2, the ARC Prize 2025 Kaggle Competition launched with over a $725K prize pool.
+=======
+2025 - ARC Prize grew into a non-profit foundation to foster the mission of guiding open source AGI research. Based on ARC-AGI-2, the ARC Prize 2025 Kaggle Competition launched with over a $725K prize pool.
+
+
+>>>>>>> Stashed changes
