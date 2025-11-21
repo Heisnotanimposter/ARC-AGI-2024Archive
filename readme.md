@@ -1,5 +1,9 @@
 ARC-AGI
 Timeline
+
+<img width="1200" height="300" alt="ARC-AGI-Timeline" src="https://github.com/user-attachments/assets/5428536b-157f-400a-a749-b2a6c286b55d" />
+
+
 2019 - ARC-AGI was introduced in François Chollets 2019 paper, "On the Measure of Intelligence". At this point, François has the hypothesis that it could not easily be beaten.
 
 2020 - In order to test this, he hosted the first ARC-AGI competition on Kaggle in 2020. The winning team, "ice cuber," achieved a 21% success rate on the test set. This low score was the first strong evidence that François's ideas in On/Measure were correct.
@@ -9,22 +13,5 @@ Timeline
 2023 - Then in 2023, the competition continued with ARCathon 2023. This time 265+ teams from 65 countries competed. First place was shared between Somayyeh Gholami and Mehran Kazeminia (Team SM) and Jack Cole (Team MindsAI) both reaching 30% on the private evaluation set.
 
 2024 - In 2024, Mike Knoop and François teamed up to create ARC Prize 2024. While the Grand Prize remained unlocked, over $125K in prizes were awarded to teams with top scores and papers. The year ended with a top score on the private evaluation of 53% See the results.
-    https://github.com/da-fr/arc-prize-2024/blob/main/the_architects.pdf
-    https://www.kaggle.com/code/rgreenblatt/rg-basic-ported-submission?scriptVersionId=184981551
-    https://github.com/michaelhodel/arc-dsl
-    https://github.com/michaelhodel/re-arc
-    https://www.kaggle.com/jcole75
-    https://github.com/jfpuget/ARC-AGI-Challenge-2024/blob/main/arc.pdf
 
-<<<<<<< Updated upstream
 2025 - ARC Prize grew into a non-profit foundation to foster the mission of guiding open source AGI research. Based on ARC-AGI-2, the ARC Prize 2025 Kaggle Competition launched with over a $725K prize pool.
-<<<<<<< Updated upstream
-=======
-2025 - ARC Prize grew into a non-profit foundation to foster the mission of guiding open source AGI research. Based on ARC-AGI-2, the ARC Prize 2025 Kaggle Competition launched with over a $725K prize pool.
-
-
->>>>>>> Stashed changes
-=======
-
-
->>>>>>> Stashed changes
