@@ -1,127 +1,73 @@
+![image](https://raw.githubusercontent.com/da-fr/arc-prize-2024/master/.github/overview.png)
 
-ARC Prize 2024 – Main Algorithm & Approach
 
-📌 Introduction
+This repo contains the code we used for our Kaggle ARC Prize 2024 submission. For an in-depth overview of our method, please take a look at our [paper](https://da-fr.github.io/arc-prize-2024/the_architects.pdf).
 
-The Abstraction and Reasoning Corpus (ARC) is a benchmark designed to test AI’s ability to generalize and reason abstractly, similar to human cognition. The ARC Prize 2024 challenged participants to build AI models capable of solving novel, unseen reasoning tasks without task-specific tuning.
+Under `training_code`, you can find our locally executable code that we used to prepare our models. The main entry points are named `run_finetuning_[model].py` for initial finetuning or `run_evaluation_[model].py` for starting an inference run with test-time-training, simulating a kaggle submission. In either case, we first load model and data, then augment our dataset. Afterwards a training run starts. In the latter case, the resulting model is evaluated using our augmentation and scoring strategies. Our training code requires the `unsloth` package and its dependencies to be installed. For evaluation, the `diskcache` package is required for caching the results of inference and score calculation.
 
-This document introduces the main algorithm and approach methods that were used in the winning solutions, providing a detailed yet accessible breakdown for study and learning.
+For retraining our winning submission's base model scoring 53.5 points in the Kaggle ARC Prize 2024 Contest, run the `run_finetune_Nemo-full.py`. The datasets used in the training process must be placed in the input folder (see the beginning of the run-file itself for details). The trained model is also available for download on huggingface as [Mistral-NeMo-Minitron-8B-ARChitects-Full-bnb-4bit](https://huggingface.co/da-fr/Mistral-NeMo-Minitron-8B-ARChitects-Full-bnb-4bit).
 
-🧠 The Core Challenge
-	•	ARC tasks consist of small grid-based puzzles where an AI must recognize hidden transformation rules based on a few examples.
-	•	The AI model must generalize and apply the learned pattern to solve new, unseen tasks.
-	•	Unlike typical AI benchmarks, hardcoding rules or using brute-force approaches fails—models must instead learn the underlying structure of abstract reasoning.
+Under `kaggle_notebooks`, you can find our notebooks for kaggle. The notebook `arc-prize-2024_kaggle.ipynb` contains the original kaggle submission scoring `53.5` points on the hidden test set. As the competition did not allow internet access, this notebook uses an offline dataset containing various python wheels (which can be created by executing the notebook `unsloth-download-2024-9-post4.ipynb` and creating a dataset from its output). This notebook, including the offline python wheel dataset and the pretrained model, is also available directly [on kaggle](https://www.kaggle.com/code/dfranzen/arc-prize-2024-solution-by-the-architects). The notebook `arc-prize-2024_updated.ipynb` contains an updated version which can download the required packages directly from the internet using pip, and can also be run locally in jupyter (this requires the `unsloth` package to be installed).
 
-🏆 Main Algorithm: Hybrid Neuro-Symbolic AI
+We trained all our models on a single `Nvidia H100` GPU. If you run into memory problems, we suggest reducing batch size and/or the `max_tokens` value. Using a batch size of `2` should allow finetuning `Mistral-NeMo-Minitron-8B-Base` on GPUs with 24 GB memory.
 
-The most successful approach in ARC Prize 2024 combined Neural Networks (Deep Learning) with Symbolic Reasoning (Program Synthesis). This Hybrid Neuro-Symbolic AI leverages the strengths of both paradigms:
+Here is a rough overview of our files and classes:
 
-1️⃣ Neural Networks for Pattern Recognition
+## Files
 
-📌 Goal: Identify visual patterns and transformations from examples.
+#### `arc_loader.py`
+- **Purpose**: Handles all Data formatting and loading
+- **Capabilities**:
+   - Class `ArcDataset` which handles all data set related tasks, e.g.:
+   - Building datasets from various sources.
+   - Modifying, shuffling, and augmenting examples.
+   - Splitting, sorting, and filtering examples.
+   - Handling dataset keys, challenges and solutions.
+   - Preparing the data for tokenization.
+   - Creating and verifying submissions.
 
-✅ Vision Transformers (ViTs) + CNNs: Used to extract features from grid-based images.
-✅ Contrastive Learning & Self-Supervised Learning (SSL): Pretrained the model to understand relationships between input and output.
-✅ Meta-Learning & Few-Shot Learning: Enabled the model to quickly adapt to new unseen problems.
+#### `model_tools.py`
+- **Purpose**: Contains code for loading, saving and manipulating models
+- **Capabilities**: 
+   - Load and Save Model and LoRA adapters
+   - Shrink Tokenizer and Embedding Layers
+   - Data Collator for masking the task inputs and the first output
 
-	Key Insight: Deep learning helps detect color patterns, object relations, and grid structures, but it struggles with logical inference.
+#### `inference_tools.py`
+- **Purpose**: Contains tools for inference and scoring
+- **Capabilities**: 
+   - Inference code, including our custom DFS
+   - Score calculation
 
-2️⃣ Program Synthesis for Logical Reasoning
+#### `selection.py`
+- **Purpose**: Contains functions used to select best answer from different Candidates
+- **Capabilities**:
+   - Various score aggregation methods
+   - Sorting candidates by their score for later submission generation
+   - Class `EvalTool` for doing above tasks on-the-fly and printing results
 
-📌 Goal: Generate a structured, interpretable solution for each task.
+#### `run_finetuning_[model].py`
+- **Purpose**: Run the initial finetuning process.
+- **Required packages**: `unsloth`
+- **Steps**:
+   - Load the base model and reduce embedding size.
+   - Load and augment training data.
+   - Create a lora adapter and execute training.
+   - Save the trained lora adapter.
+   - Merge the lora model into the base model and save as final model.
 
-✅ Domain-Specific Language (DSL) + Inductive Logic Programming (ILP): Created executable programs that describe the transformation rules.
-✅ Search-Based Techniques (Monte Carlo Tree Search, A Search)*: Used to find optimal solutions in the task space.
-✅ Few-Shot Program Induction: Trained models to generate small rule-based programs based on limited examples.
+#### `run_evaluation_[model].py`
+- **Purpose**: Run inference (simuating a kaggle submission).
+- **Required packages**: `unsloth` and `diskcache`
+- **Steps**:
+   - Load the finetuned model.
+   - Possibly perform test-time-training on the evaluation set's examples.
+   - Save the trained lora adapter for later use.
+   - Run inference on the evaluation set.
+   - Write a `submission.json` file.
+   - Reload and verify the submission file.
 
-	Key Insight: Symbolic reasoning enables precise, interpretable solutions, but it lacks flexibility in handling visual patterns.
+## License
 
-🔄 How the Hybrid Approach Works
+Our code is available under the Apache 2.0 license. See the [LICENSE.txt](LICENSE.txt) file for more info.
 
-The Neuro-Symbolic AI pipeline follows these four stages:
-
-1️⃣ Perception (Deep Learning Stage)
-	•	The model extracts visual features using CNNs or Vision Transformers.
-	•	It identifies key transformations (e.g., object movement, color shifts, symmetry, etc.).
-
-2️⃣ Abstract Representation (Feature Encoding)
-	•	The neural network converts the extracted features into symbolic representations (e.g., object coordinates, shape types, relationships).
-
-3️⃣ Reasoning & Rule Extraction (Symbolic Learning Stage)
-	•	A Program Synthesis Model (DSL or Inductive Logic) learns the logical transformation rules.
-	•	A search-based approach finds optimal rules for solving the task.
-
-4️⃣ Generalization & Execution
-	•	The generated program is applied to new test cases to predict solutions.
-	•	The meta-learning module ensures the model adapts when encountering novel tasks.
-
-🔬 Why This Approach Works
-
-Component	Strength	Weakness
-Deep Learning (Neural Networks)	Recognizes patterns, textures, and structures	Poor logical inference, lacks interpretability
-Symbolic Reasoning (Program Synthesis)	Enables structured reasoning, interpretable rules	Limited in handling complex visual features
-Hybrid Neuro-Symbolic AI	Combines strengths of both	Requires high compute power, complex to implement
-
-📚 Study & Learning Path
-
-To fully understand and study this approach, consider the following learning materials:
-
-1️⃣ Deep Learning & Vision Models
-
-📖 Topics to Learn:
-	•	CNNs (Convolutional Neural Networks)
-	•	Vision Transformers (ViTs)
-	•	Contrastive Learning & Self-Supervised Learning
-
-🛠 Resources:
-	•	Stanford’s CS231n: Convolutional Neural Networks
-	•	ViT Research Paper: An Image is Worth 16x16 Words
-
-2️⃣ Symbolic Reasoning & Program Synthesis
-
-📖 Topics to Learn:
-	•	Domain-Specific Languages (DSL)
-	•	Inductive Logic Programming (ILP)
-	•	Search Algorithms (A*, Monte Carlo Tree Search)
-
-🛠 Resources:
-	•	Stanford’s CS221: Artificial Intelligence: Search and Reasoning
-	•	Inductive Logic Programming Paper: ILP for AI
-
-3️⃣ Hybrid Neuro-Symbolic AI
-
-📖 Topics to Learn:
-	•	Few-Shot Learning & Meta-Learning
-	•	Neural-Symbolic AI Frameworks
-	•	AI Generalization Strategies
-
-🛠 Resources:
-	•	Meta-Learning Book: Meta-Learning: The Science of Learning to Learn
-	•	Neuro-Symbolic AI: MIT’s Hybrid AI Research
-
-🚀 Future Directions & Research Challenges
-
-🔹 Causal Reasoning – Teaching AI to understand cause-effect relationships instead of just pattern matching.
-🔹 Multimodal Learning – Combining visual, textual, and logical reasoning in a unified model.
-🔹 Better Explainability – Making AI models more transparent and interpretable for humans.
-🔹 Efficient Training Methods – Reducing compute costs and improving training efficiency.
-
-📢 Acknowledgments
-
-We thank all researchers, teams, and sponsors who contributed to ARC Prize 2024. This challenge has significantly advanced AI reasoning and provided valuable insights into human-like problem-solving with AI.
-
-📖 For more details, check the full ARC Prize 2024 Technical Report.
-
-💬 Join the Discussion
-
-🚀 Connect with the ARC Prize 2024 Community for discussions, Q&A, and research collaborations:
-🔗 Join Here
-
-✨ Why This Version?
-
-✔ Simplifies complex AI concepts for broader readability.
-✔ Provides clear study paths for learners and researchers.
-✔ Explains why hybrid AI outperforms pure deep learning.
-✔ Includes key research directions to encourage further innovation.
-
-This README.md serves as a study guide for anyone looking to understand, learn, and improve upon the state-of-the-art AI models in abstract reasoning. Let me know if you need any modifications or additional explanations! 🚀
