@@ -18,8 +18,13 @@ Timeline
 
 <<<<<<< Updated upstream
 2025 - ARC Prize grew into a non-profit foundation to foster the mission of guiding open source AGI research. Based on ARC-AGI-2, the ARC Prize 2025 Kaggle Competition launched with over a $725K prize pool.
+<<<<<<< Updated upstream
 =======
 2025 - ARC Prize grew into a non-profit foundation to foster the mission of guiding open source AGI research. Based on ARC-AGI-2, the ARC Prize 2025 Kaggle Competition launched with over a $725K prize pool.
+
+
+>>>>>>> Stashed changes
+=======
 
 
 >>>>>>> Stashed changes
